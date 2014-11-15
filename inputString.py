@@ -6,7 +6,7 @@ import os
 def getInputString(location):
     if(location == cmd):
         inputString = raw_input("Please enter your function: ")
-    else if(location == std):
+    elif(location == std):
         TODO;
     else:
         logger(["ERROR","getInputString received an invalid parameter."])
@@ -41,8 +41,12 @@ def parseInputString(inputString):
     for character in inputString:
         if(character == '('):
             leftBracket += 1
-        if(character == ')'):
+            continue
+        elif(character == ')'):
             rightBracket += 1
+            continue
+        else:
+            continue
     if(rightBracket != leftBracket):
         return ["ERROR","The equation you input does not have a matching number of brackets!"]
 
