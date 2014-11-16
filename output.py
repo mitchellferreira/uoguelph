@@ -2,6 +2,7 @@
 import os
 import datetime
 import sys
+import string
 from math import *
 
 #Taken from: http://stackoverflow.com/questions/566746/how-to-get-console-window-width-in-python
@@ -34,31 +35,41 @@ def getTerminalSize():
         #    cr = (25, 80)
     return int(cr[1]), int(cr[0])
 
-def drawToCMD(equation):
+def drawToCMD(inString):
     os.system("clear")
     (width, height) = getTerminalSize()
+    list = string.split(inString, "=")
+    equation = list[1]
     i=0
 
-    while i < height:
+    while i < height+1:
             sys.stdout.write("\x1b7\x1b[%d;%df%s\x1b8" % (i, width/2, "|"))
             sys.stdout.flush()
             i = i+1
     i=0
-    while i< width:
+    while i< width+1:
         sys.stdout.write("\x1b7\x1b[%d;%df%s\x1b8" % (height/2, i, "-"))
         sys.stdout.flush()
         i = i+1
 
     for x in range(width/2*-1,width/2):
         row = height/2-eval(equation)
-        if row > 0 and row < height:
+        if row > 0 and row < height+1:
             sys.stdout.write("\x1b7\x1b[%d;%df%s\x1b8" % (row, x+width/2, "X"))
             sys.stdout.flush()
 
-def writeToCMD(inString):
-    print "Answer: ", inString
+    sys.stdout.write("\x1b7\x1b[%d;%df%s\x1b8" % (height, 0, "Press enter to exit"))
+    sys.stdout.flush()
+    close = raw_input()
+    os.system("clear")
+
+def writeToCMD(equation):
+    list = string.split(equation, "=")
+    print list[1], "="
+    print eval(list[1])
 
 def printError(location, message):
+    #This function has been deprecated
     if location == "cmd":
         print message
     elif location == "std":
@@ -72,10 +83,10 @@ def logger(type, message, exception):
     logs = open(filename, "a")
 
     if(type == "exception"):
-        logs.write("Error Type: %s.\tMessage: %s.\tException: %s\n" % (type, message, exception))
+        logs.write("Time: %s. Error Type: %s.\tMessage: %s.\tException: %s\n" % (datetime.datetime.now().time(), type, message, exception))
     else:
         logs.write("%s.\t%s." % (type, message))
     logs.close()
 
-#logger("exception", "this needs to be logged", "Exception Business")
-drawToCMD("x*x*x")
+logger("exception", "this needs to be logged", "Exception Business")
+drawToCMD("y=-abs(x)")
